@@ -37,6 +37,7 @@ skipSpaces = skipMany spaceChar
 separator = spaced . char $ ','
 
 spaced p = skipSpaces *> p <* skipSpaces
+parens p = char '(' *> p <* char ')'
 
 -- END Parsing Helpers
 
@@ -49,16 +50,15 @@ var = Var <$> letter
 fnApp :: GenParser Char st Term
 fnApp = do
     fnId <- fn
-    char '('
-    tms <- spaced terms
-    char ')'
+    tms <- parens . spaced $ terms
     return $ Fn fnId tms
 
 addoperator = Operation <$> spaced (oneOf "+-")
 addoperation = chainl1 (try muloperation <|> try fnApp <|> var) addoperator
 
 muloperator = Operation <$> spaced (oneOf "/*")
-muloperation = chainl1 (try fnApp <|> var) muloperator
+muloperation = try (chainl1 ((try . parens $ addoperation) <|> try fnApp <|> var) muloperator)
+               <|> parens muloperation
 
 term :: GenParser Char st Term
 term = try addoperation <|> try muloperation <|> try fnApp <|> var <?> "term"
@@ -66,18 +66,33 @@ term = try addoperation <|> try muloperation <|> try fnApp <|> var <?> "term"
 terms :: GenParser Char st [Term]
 terms = sepBy term separator
 
-statement = endBy term eof
+statement = endBy formula eof
 
 -- FMLs
 
 atom = Atom <$> letter
 
-negation = Not <$> (oneOf "~" *> formula)
+flipped p = Not <$> (oneOf "~" *> p)
 
-conjunction = do
-    fml1 <- formula
-    fml2 <- formula
-    return $ And fml1 fml2
+literal = flipped literal <|> atom
+
+negation = flipped formula
+
+vee :: GenParser Char st (Fml -> Fml -> Fml)
+vee = spaced (char '|') *> return Or
+
+disjunction = chainl1 disjuncts vee
+  where
+    disjuncts = try conjunction <|> (try . flipped.parens $ conjunction) <|> literal
+
+wedge :: GenParser Char st (Fml -> Fml -> Fml)
+wedge = spaced (char '&') *> return And
+
+conjunction = try (chainl1 conjuncts wedge) <|> parens conjunction
+  where
+    conjuncts = (try . flipped.parens $ disjunction)
+             <|> (try . parens $ disjunction)
+             <|> literal
 
 formula :: GenParser Char st Fml
-formula = try negation <|> atom
+formula = try disjunction <|> try conjunction <|> try negation <|> atom
