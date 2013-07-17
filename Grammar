@@ -1,0 +1,66 @@
+-- IDEAS
+--   - Turnstiles? Modal entailment?
+--   - Also accept UTF-8 chars: ¬, ∧, ∨, →, etc.
+--   - Allow defining output chars, ideally via specifying them as UTF-8 points or so
+--   - Allow embedded LaTeX --> Flatten LaTeX into compiled result
+
+-- EXAMPLES
+--    forall x. x = x -> x /= x
+--    (p & q || r) -> p || r
+--    W, R, w |= []p -> p
+
+STATEMENT
+  ::= VARS TURNSTILE FML
+    ;
+
+TURNSTILE
+  ::= '|-'
+    | '|='
+    ;
+
+FML
+  ::= MODAL_FML
+    | CLASSICAL_FML
+    ;
+
+MODAL_FML
+  ::= PROP_FML
+    | '<>' MODAL_FML
+    | '[]' MODAL_FML
+    ;
+
+-- TODO Optional brackets
+CLASSICAL_FML
+  ::= PROP_FML
+    | '~' CLASSICAL_FML
+    | CLASSICAL_FML '&' CLASSICAL_FML
+    | CLASSICAL_FML '||' CLASSICAL_FML
+    | CLASSICAL_FML '->' CLASSICAL_FML
+    | CLASSICAL_FML '<->' CLASSICAL_FML
+    | CLASSICAL_FML '<+>' CLASSICAL_FML
+    | 'forall' VAR '.' CLASSICAL_FML
+    | 'exists' VAR '.' CLASSICAL_FML
+    | PRED '(' TERMS ')'
+    | TERM '=' TERM
+    | TERM '/=' TERM
+    ;
+
+PROP_FML
+  ::= PROP_LETTER
+    | '~' PROP_FML
+    | PROP_FML '&' PROP_FML
+    | PROP_FML '||' PROP_FML
+    | PROP_FML '->' PROP_FML
+    | PROP_FML '<->' PROP_FML
+    | PROP_FML '<+>' PROP_FML
+    ;
+
+TERMS
+  ::= TERM ',' TERMS
+    | TERM
+    ;
+
+TERM
+  ::= VAR
+    | FN '(' TERMS ')'
+    ;
