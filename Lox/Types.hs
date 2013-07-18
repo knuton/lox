@@ -9,6 +9,9 @@ data Term = Const Int
             deriving (Show)
 
 data Fml = Atom Id
+         | Eq Term Term
+         | Neq Term Term
+         | Pred Id [Term]
          | Not Fml
          | And Fml Fml
          | Or Fml Fml

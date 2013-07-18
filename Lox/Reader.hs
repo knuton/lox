@@ -11,6 +11,7 @@ import Lox.Parsing
 
 -- - XOR: What would be a "natural" place in the binding order?
 -- - Handling Unicode connectives
+-- - Optional mode: Check formulas, e.g. disallow §x & x=x§
 
 statement = endBy formula eof
 
@@ -30,10 +31,7 @@ fn :: GenParser Char st Char
 fn = letter
 
 fnApp :: GenParser Char st Term
-fnApp = do
-    fnId <- fn
-    tms <- parens . spaced $ terms
-    return $ Fn fnId tms
+fnApp = application (Fn <$> fn) term
 
 -- | Complex Terms
 
@@ -44,9 +42,6 @@ muloperator = Operation <$> spaced (oneOf "/*")
 muloperation = try (chainl1 ((try . parens $ addoperation) <|> try fnApp <|> var) muloperator)
                <|> parens muloperation
 
-terms :: GenParser Char st [Term]
-terms = sepBy term separator
-
 -- |
 -- | Formulas
 -- |
@@ -56,7 +51,12 @@ formula = try biconditional <|> try negation <|> atom
 
 -- | Atomic Formulas
 
-atom = Atom <$> letter
+atom = tryAllOf [
+         binop (symbol "=" *> return Eq) term term,
+         binop (symbol "/=" *> return Neq) term term,
+         application (Pred <$> letter) term,
+         Atom <$> letter
+       ]
 
 literal = flipped literal <|> atom
 
@@ -94,11 +94,11 @@ doublearrow :: GenParser Char st (Fml -> Fml -> Fml)
 doublearrow = symbols [ "<->", "<=>" ] *> return Iff
 
 biconditional = chainl1 equivalents doublearrow
-  where equivalents = try (foldl1 (<|>) (map (try.strongBinding) [implication, disjunction])) <|> literal
+  where equivalents = tryAllOf (map strongBinding [implication, disjunction]) <|> literal
 
 -- | Parsing Formulas
 
 flipped p = Not <$> (oneOf "~" *> p)
 
-weakBinding p = flipped (parens p) <|> parens p
-strongBinding p = flipped (parens p) <|> p
+weakBinding p = try (flipped (parens p)) <|> parens p
+strongBinding p = try (flipped (parens p)) <|> p
