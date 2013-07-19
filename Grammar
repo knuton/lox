@@ -1,8 +1,9 @@
 -- IDEAS
 --   - Turnstiles? Modal entailment?
---   - Also accept UTF-8 chars: ¬, ∧, ∨, →, etc.
 --   - Allow defining output chars, ideally via specifying them as UTF-8 points or so
 --   - Allow embedded LaTeX --> Flatten LaTeX into compiled result
+-- FEATURES
+--   - Also accept UTF-8 chars: ¬, ∧, ∨, →, etc.
 --   - Actually don't distinguish FOL, PROPLOG, MODAL, etc.: let the user wreck things, but have freedom
 
 

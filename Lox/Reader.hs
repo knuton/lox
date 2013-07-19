@@ -11,7 +11,6 @@ import Lox.Parsing
 
 -- | LUXURY ITEMS
 -- - XOR: What would be a "natural" place in the binding order?
--- - Handling Unicode connectives
 -- - Optional mode: Check formulas, e.g. disallow §x & x=x§
 
 statement = endBy formula eof
@@ -64,8 +63,8 @@ unary = try (flipped quantification) <|> try modaloperation <|> try (flipped una
 
 -- Quantifiers
 
-allquant = symbol "forall" *> return Forall
-exquant = symbol "exists" *> return Exists
+allquant = symbols [ "forall", "\x2200" ] *> return Forall
+exquant = symbols [ "exists", "\x2203" ] *> return Exists
 
 quantification = do
     quantifier <- allquant <|> exquant
@@ -81,7 +80,7 @@ negation = flipped formula
 -- Conjunction
 
 wedge :: GenParser Char st (Fml -> Fml -> Fml)
-wedge = symbols [ "&&", "&" ] *> return And
+wedge = symbols [ "&&", "&", "\x2227" ] *> return And
 
 conjunction = try (chainl1 conjuncts wedge) <|> parens conjunction
   where conjuncts = try (weakBinding disjunction) <|> quantification <|> unary
@@ -89,7 +88,7 @@ conjunction = try (chainl1 conjuncts wedge) <|> parens conjunction
 -- Disjunction
 
 vee :: GenParser Char st (Fml -> Fml -> Fml)
-vee = symbols [ "||", "|" ] *> return Or
+vee = symbols [ "||", "|", "\x2228" ] *> return Or
 
 disjunction = chainl1 disjuncts vee
   where disjuncts = try (strongBinding conjunction) <|> unary
@@ -97,7 +96,7 @@ disjunction = chainl1 disjuncts vee
 -- Implication
 
 arrow :: GenParser Char st (Fml -> Fml -> Fml)
-arrow = symbols [ "->", "=>" ] *> return OnlyIf
+arrow = symbols [ "->", "=>", "\x2192"] *> return OnlyIf
 
 implication = optionalParens (binop (arrow *> return OnlyIf) operand formula)
   where operand = try (strongBinding disjunction) <|> unary
@@ -105,7 +104,7 @@ implication = optionalParens (binop (arrow *> return OnlyIf) operand formula)
 -- Biconditional
 
 doublearrow :: GenParser Char st (Fml -> Fml -> Fml)
-doublearrow = symbols [ "<->", "<=>" ] *> return Iff
+doublearrow = symbols [ "<->", "<=>", "\x2194" ] *> return Iff
 
 biconditional = chainl1 equivalents doublearrow
   where equivalents = tryAllOf (map strongBinding [implication, disjunction]) <|> unary
@@ -113,8 +112,8 @@ biconditional = chainl1 equivalents doublearrow
 -- Modal Operators
 
 diamond, box :: GenParser Char st (Fml -> Fml)
-diamond = symbol "<>" *> return Diamond
-box = symbol "[]" *> return Box
+diamond = symbols [ "<>", "\x22C4", "\x25CA", "\x25C7", "\x2662" ] *> return Diamond
+box = symbols [ "[]", "\x25FB", "\x25A1" ] *> return Box
 
 modaloperation = do
     modop <- diamond <|> box
@@ -123,7 +122,7 @@ modaloperation = do
 
 -- | Parsing Formulas
 
-flipped p = Not <$> (symbol "~" *> p)
+flipped p = Not <$> (symbols [ "~", "\x00AC" ] *> p)
 
 weakBinding p = try (flipped (parens p)) <|> parens p
 strongBinding p = try (flipped (parens p)) <|> p
