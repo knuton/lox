@@ -48,7 +48,7 @@ muloperation = try (chainl1 ((try . parens $ addoperation) <|> try fnApp <|> var
 -- |
 
 formula :: GenParser Char st Fml
-formula = try biconditional <|> try negation <|> try quantification <|> atom
+formula = try biconditional <|> try negation <|> try quantification <|> try modaloperation <|> atom
 
 -- | Atomic Formulas
 
@@ -58,7 +58,7 @@ atom = tryAllOf [ binop (symbol "=" *> return Eq) term term
                 , Atom <$> letter
                 ]
 
-unary = try (flipped quantification) <|> try (flipped unary) <|> atom
+unary = try (flipped quantification) <|> try modaloperation <|> try (flipped unary) <|> atom
 
 -- | Complex Formulas
 
@@ -109,6 +109,17 @@ doublearrow = symbols [ "<->", "<=>" ] *> return Iff
 
 biconditional = chainl1 equivalents doublearrow
   where equivalents = tryAllOf (map strongBinding [implication, disjunction]) <|> unary
+
+-- Modal Operators
+
+diamond, box :: GenParser Char st (Fml -> Fml)
+diamond = symbol "<>" *> return Diamond
+box = symbol "[]" *> return Box
+
+modaloperation = do
+    modop <- diamond <|> box
+    fml <- try (parens formula) <|> unary
+    return $ modop fml
 
 -- | Parsing Formulas
 

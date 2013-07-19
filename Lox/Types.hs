@@ -20,4 +20,6 @@ data Fml = Atom Id
          | OnlyIf Fml Fml
          | Iff Fml Fml
          | Xor Fml Fml
+         | Diamond Fml
+         | Box Fml
            deriving (Show)
