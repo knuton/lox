@@ -1,6 +1,6 @@
-module Lox.Reader (asLatex) where
+module Text.Lox.Writers.Latex (asLatex) where
 
-import Lox.Types
+import Text.Lox.Types
 
 asLatex :: Fml -> String
 

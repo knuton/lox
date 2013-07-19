@@ -1,4 +1,4 @@
-module Lox.Types where
+module Text.Lox.Types where
 
 type Id = Char
 type Op = Char

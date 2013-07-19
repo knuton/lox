@@ -1,9 +1,9 @@
-module Lox.Reader where
+module Text.Lox.Reader (statement) where
 
 import Control.Applicative ((<$>), (<*>), (*>), (<*))
 import Text.ParserCombinators.Parsec
-import Lox.Types
-import Lox.Parsing
+import Text.Lox.Types
+import Text.Lox.Parsing
 
 -- |
 -- | TODO
@@ -13,7 +13,7 @@ import Lox.Parsing
 -- - XOR: What would be a "natural" place in the binding order?
 -- - Optional mode: Check formulas, e.g. disallow §x & x=x§
 
-statement = endBy formula eof
+statement = formula <* eof
 
 -- |
 -- | Terms

@@ -1,6 +1,6 @@
-module Lox.Writers.HTML (asHTML) where
+module Text.Lox.Writers.HTML (asHTML) where
 
-import Lox.Types
+import Text.Lox.Types
 
 asHTML :: Fml -> String
 

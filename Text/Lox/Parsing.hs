@@ -1,4 +1,4 @@
-module Lox.Parsing where
+module Text.Lox.Parsing where
 
 import Control.Applicative ((<$>), (<*>), (*>), (<*))
 import Text.ParserCombinators.Parsec
