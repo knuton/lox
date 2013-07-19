@@ -13,6 +13,8 @@ data Fml = Atom Id
          | Neq Term Term
          | Pred Id [Term]
          | Not Fml
+         | Forall Id Fml
+         | Exists Id Fml
          | And Fml Fml
          | Or Fml Fml
          | OnlyIf Fml Fml
