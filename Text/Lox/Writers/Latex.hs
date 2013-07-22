@@ -9,8 +9,8 @@ asLatex (Eq t1 t2) = termAsLatex t1 ++ " = " ++ termAsLatex t2
 asLatex (Neq t1 t2) = termAsLatex t1 ++ " = " ++ termAsLatex t2
 asLatex (Pred id ts) = application id ts
 asLatex (Not fml) = "\\neg " ++ asLatex fml
-asLatex (Forall id fml) = "\\forall " ++ [id] ++ " " ++ asLatex fml
-asLatex (Exists id fml) = "\\exists " ++ [id] ++ " " ++ asLatex fml
+asLatex (Forall id fml) = "\\forall " ++ [id] ++ ". " ++ asLatex fml
+asLatex (Exists id fml) = "\\exists " ++ [id] ++ ". " ++ asLatex fml
 asLatex (And f1 f2) = parens (asLatex f1 ++ " \\wedge " ++ asLatex f2)
 asLatex (Or f1 f2) = parens (asLatex f1 ++ " \\vee " ++ asLatex f2)
 asLatex (OnlyIf f1 f2) = parens (asLatex f1 ++ " \\rightarrow " ++ asLatex f2)

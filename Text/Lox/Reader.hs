@@ -57,14 +57,17 @@ atom = tryAllOf [ binop (symbol "=" *> return Eq) term term
                 , Atom <$> letter
                 ]
 
-unary = try (flipped quantification) <|> try modaloperation <|> try (flipped unary) <|> atom
+unary = try quantification
+     <|> try modaloperation
+     <|> try (flipped unary)
+     <|> atom
 
 -- | Complex Formulas
 
 -- Quantifiers
 
-allquant = symbols [ "forall", "\x2200" ] *> return Forall
-exquant = symbols [ "exists", "\x2203" ] *> return Exists
+allquant = symbols [ "forall", "/\\", "\x2200" ] *> return Forall
+exquant = symbols [ "exists", "\\/", "\x2203" ] *> return Exists
 
 quantification = do
     quantifier <- allquant <|> exquant
@@ -96,7 +99,7 @@ disjunction = chainl1 disjuncts vee
 -- Implication
 
 arrow :: GenParser Char st (Fml -> Fml -> Fml)
-arrow = symbols [ "->", "=>", "\x2192"] *> return OnlyIf
+arrow = symbols [ "->", "=>", "\x2192" ] *> return OnlyIf
 
 implication = optionalParens (binop (arrow *> return OnlyIf) operand formula)
   where operand = try (strongBinding disjunction) <|> unary
@@ -112,7 +115,12 @@ biconditional = chainl1 equivalents doublearrow
 -- Modal Operators
 
 diamond, box :: GenParser Char st (Fml -> Fml)
-diamond = symbols [ "<>", "\x22C4", "\x25CA", "\x25C7", "\x2662" ] *> return Diamond
+diamond = symbols [ "<>"
+                  , "\x22C4"
+                  , "\x25CA"
+                  , "\x25C7"
+                  , "\x2662"
+                  ] *> return Diamond
 box = symbols [ "[]", "\x25FB", "\x25A1" ] *> return Box
 
 modaloperation = do
