@@ -18,14 +18,69 @@ Language
 The notation for formulas understood by lox is meant to be such that it can be
 easily written and read in a text editor, while being precise enough for strict
 analysis and translation into different formats, most prominently LaTeX math
-expressions.
+expressions. There are several possibilities for writing most logical operations,
+including Unicode characters.
 
-Some examples of formulas that would be processed by lox are `forall x. x=x`,
-`/\x.x=x`, `p -> q -> p` and `[](p -> q) -> ([]p -> []q)`.
+Some examples of formulas that would be processed by lox are `forall x. x=x`
+(equivalently `/\x.x=x`), `p -> q -> p` and `[](p -> q) => ([]p → []q)`.
 
 lox is unreasonably forgiving when parsing the language. If you use an identifier
 as both an object variable and a predicate variable, or mix modal and first-order
 operators, it will assume that you know what you are doing and happily parse it.
+
+### Terms
+
+Any upper- or lowercase letter can serve as an identifier for a variable or
+function. Below, `x` is any such letter, as is `f`, and `t1, ..., tn` are terms.
+
+```
+Term ::= x ¦ f(t1, ..., tn) ¦ t1 + t2 ¦ t1 - t2 ¦ t1 * t2 ¦ t1 / t2
+```
+
+### Classical Logic
+
+Any upper- or lowercase letter can serve as a propositional letter or predicate
+symbol. Below, `p` is any such letter, as is `P`, `t1, ..., tn` are terms, and `A`
+`B` are formulas.
+
+```
+Atom ::= p ¦ P(t1, ..., tn) ¦ t1 = t2 ¦ t1 /= t2
+```
+
+```
+Negation ::= ~A ¦ ¬A
+```
+
+```
+Conjunction ::= A && B ¦ A & B ¦ A ∧ B
+```
+
+```
+Disjunction ::= A || B ¦ A | B ¦ A ∨ B
+```
+
+```
+Implication ::= A -> B ¦ A => B ¦ A → B
+```
+
+```
+Biconditional ::= A <-> B ¦ A <=> B ¦ A ↔ B
+```
+
+```
+Quantification ::= forall x. A ¦ /\x. A ¦ ∀x. A ¦ exists x. A ¦ \/x. A ¦ ∃x. A
+```
+
+### Modal Logic
+
+```
+Modal ::= []A ¦ ◻A ¦ □A ¦ <> A ¦ ⋄A ¦ ◊A ¦ ◇A ¦ ♢A
+```
+
+### Formulas
+
+A `Formula` is any of the above, i.e. any of `Atom`, `Negation`, `Conjunction`,
+`Disjunction`, `Implication`, `Biconditional`, `Quantification`, or `Modal`.
 
 Documents
 ---------
@@ -43,6 +98,6 @@ Dependencies
 Copyright
 ---------
 
-Copyright 2013 Johannes Emerich
+(C) 2013 Johannes Emerich
 
 For licensing, see `LICENSE`.
