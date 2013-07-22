@@ -6,7 +6,7 @@ asLatex :: Fml -> String
 
 asLatex (Atom id) = [id]
 asLatex (Eq t1 t2) = termAsLatex t1 ++ " = " ++ termAsLatex t2
-asLatex (Neq t1 t2) = termAsLatex t1 ++ " = " ++ termAsLatex t2
+asLatex (Neq t1 t2) = termAsLatex t1 ++ " \\not= " ++ termAsLatex t2
 asLatex (Pred id ts) = application id ts
 asLatex (Not fml) = "\\neg " ++ asLatex fml
 asLatex (Forall id fml) = "\\forall " ++ [id] ++ ". " ++ asLatex fml

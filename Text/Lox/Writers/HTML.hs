@@ -6,7 +6,7 @@ asHTML :: Fml -> String
 
 asHTML (Atom id) = [id]
 asHTML (Eq t1 t2) = termAsHTML t1 ++ " = " ++ termAsHTML t2
-asHTML (Neq t1 t2) = termAsHTML t1 ++ " = " ++ termAsHTML t2
+asHTML (Neq t1 t2) = termAsHTML t1 ++ " &ne; " ++ termAsHTML t2
 asHTML (Pred id ts) = application id ts
 asHTML (Not fml) = "&not;" ++ asHTML fml
 asHTML (Forall id fml) = "&forall;" ++ [id] ++ " " ++ asHTML fml
