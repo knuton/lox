@@ -85,15 +85,25 @@ A `Formula` is any of the above, i.e. any of `Atom`, `Negation`, `Conjunction`,
 Documents
 ---------
 
+When using `lox`, you can put inline formula statements in your document in between
+two `§` characters. For example, if you run this very document through `lox`, the
+formula §forall x. forall y. x = y | x /= y§ will be parsed and translated into a
+"proper" formula. More precisely, it would be rewritten as an inline math expression,
+$\forall x.\forall y. x = y \vee x \not= y$, before the document would go through
+Pandoc's processing.
+
 As with formulas itself, `lox` is very forgiving with documents. If it can not
 successfully process some formula, it will leave it unchanged and process only the
 remaining formulas. If it fails on the whole document, it will just pass it on to
 Pandoc without any changes.
 
-Dependencies
-------------
+Since `lox` is only a slight modification of the regular `pandoc` executable, it can
+be used in the very same way.
 
-- pandoc
+Module Dependencies
+-------------------
+
+- pandoc (1.11.1)
 
 Copyright
 ---------
