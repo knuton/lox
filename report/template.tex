@@ -1,0 +1,168 @@
+\documentclass[a4paper,11pt,titlepage]{article}
+
+\usepackage[sc,center]{titlesec} %Um Kapitelnamen-Schrift zu veraendern
+\usepackage[english]{babel}
+\usepackage{fancyhdr} %Fuer Kopf und Fusszeilen
+\usepackage{anysize} %Damit man Raender leicht einstellen kann
+\usepackage[]{xcolor,graphicx,float,subfigure,wrapfig} %Alles rund um Grafiken
+\usepackage{lmodern}
+\usepackage{upquote}
+\usepackage{url}
+\usepackage{hyperref}
+
+% Better verbatim
+\usepackage{alltt}
+\usepackage{multicol}
+
+\usepackage[T1]{fontenc}
+\linespread{1.05}
+\usepackage{microtype}
+
+\usepackage[small]{caption}
+\usepackage{cite}
+\usepackage{enumerate}
+
+\usepackage[scaled=0.85]{beramono}
+
+%%%% STUFF FROM TEMPLATE %%%%
+%\usepackage{keyval} %Das brauchte ein anderes Paket
+%\usepackage{ntimes} % War fuer Liste mit Abk.
+
+%Fuer Formatierung der Bildunterschriften.
+%\usepackage[small,indent]{caption2} Angeblich out of date
+\usepackage{amssymb} % Mathe Symbole
+\usepackage{amsmath,amsthm} % Mathe
+\usepackage{mathtools} % Mathe
+\usepackage{stmaryrd} % More symbols
+\usepackage{mathspec}
+\setmonofont{Palatino}
+\setmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}
+
+\usepackage{mathpazo}
+
+% Fuer eine Liste mit Abk.
+\usepackage[refpage]{nomencl}
+\usepackage{setspace}
+
+% Um algorithmen und Code schoen aussehen zu lassen
+\usepackage{listings}
+
+$if(lhs)$
+\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+$endif$
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+$endif$
+$if(tables)$
+\usepackage{longtable}
+$endif$
+$if(graphics)$
+\usepackage{graphicx}
+% We will generate all images so they have a width \maxwidth. This means
+% that they will get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+\else\Gin@nat@width\fi}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=\maxwidth]{#1}}
+$endif$
+
+%%% Header
+\usepackage{fancyhdr}
+\setlength{\headheight}{15pt}
+\addtolength{\headwidth}{-1cm}
+
+\pagestyle{fancyplain}
+%\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+%\renewcommand{\sectionmark}[1]{\markright{#1}{}}
+
+\fancyhead[LE,RO]{\fancyplain{}{\thepage}}
+\fancyhead[RE]{\fancyplain{}{\textit{\leftmark}}}
+\fancyhead[LO]{\fancyplain{}{\textit{\rightmark}}}
+\fancyfoot[C]{}
+
+% The symbols for the set: natural number, real numbers, ...
+\newcommand{\IN}{\ensuremath{\mathbb{N}}}
+\newcommand{\IR}{\ensuremath{\mathbb{R}}}
+
+\newcommand{\GS}[1]{\mbox{\sf \bfseries #1}}
+
+\renewcommand{\footnotesize}{\scriptsize}
+\renewcommand{\arraystretch}{1.25}
+
+%Zeilenabstand ist jetzt 1.5 fach
+\onehalfspacing 
+%Bilder werden auch im Unterverzeichnis img gesucht
+\graphicspath{{images/}} 
+%Raender
+\marginsize{3cm}{3cm}{2cm}{2cm}
+
+%%% SOLARIZED COLORS
+\definecolor{sdbase03}{HTML}{002B36}
+\definecolor{sdbase3}{HTML}{FDF6E3}
+\definecolor{sdcyan}{HTML}{2AA198}
+\definecolor{sdgreen}{HTML}{859900}
+\definecolor{sdblue}{HTML}{268BD2}
+\definecolor{sdviolet}{HTML}{6C71C4}
+\definecolor{sdred}{HTML}{DC322F}
+
+%%% HIGHTLIGHTING
+\definecolor{lightgray}{rgb}{0.9,0.9,0.9}
+\definecolor{darkgray}{rgb}{0.4,0.4,0.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstset{%
+backgroundcolor=\color{sdbase3},
+extendedchars=true,
+basicstyle=\footnotesize\ttfamily,
+showstringspaces=false,
+showspaces=false,
+numbers=left,
+numberstyle=\footnotesize,
+numbersep=9pt,
+tabsize=2,
+breaklines=true,
+showtabs=false,
+captionpos=b
+}
+
+%%% HYPHENATION
+\hyphenation{}
+
+\begin{document}
+\selectlanguage{english}
+
+\begin{titlepage}
+  \begin{center}
+    \vspace*{10ex}
+    \includegraphics[width=60mm]{report/images/illclogo.pdf}\\
+    \vspace*{10ex}
+    {Haskell Project}\\
+    \small{Supervisor: Jan van Eijck}\\
+    \vspace*{5ex}
+    \textbf{\color{sdbase03} \Large Parsing a Plaintext Language for Logic Formulas}\\
+    \vspace*{5ex}
+    {Johannes Emerich}\\
+    {UvA ID 10224572}\\
+    \vspace*{20ex}
+    \small{July 2013}\\
+  \end{center}
+\end{titlepage}
+
+\tableofcontents
+
+$body$
+
+% Bib
+%\clearpage
+%\bibliographystyle{amsalpha}
+%\refstepcounter{section}
+%\addcontentsline{toc}{section}{Bibliography}
+%\bibliography{bibliography}
+
+\end{document}
